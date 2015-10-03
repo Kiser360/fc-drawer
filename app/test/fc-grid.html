@@ -25,7 +25,6 @@
     suite('<fc-grid>', function() {
       var grid;
 
-
       setup(function() {
         grid = fixture('basic');
       });
@@ -35,13 +34,27 @@
           assert.equal(pixel, "#000");
         });
       });
-      
+
       test('Touching a pixel will set the color value', function() {
         //We'll just invoke the listener and pass a mock event
-        grid.onClick({target:{id: 0}});
-        assert.equal(grid.pixels[0], "tap");
+        mockElement = {id: "pixel-0", style: {background: "cyan"}}; 
+        grid.onClick({target: mockElement});
+        assert.equal(grid.pixels[0], "#000");
       });
 
+      test('Touching a pixel will set background color of the target', function() {
+        mockElement = {id: "pixel-0", style: {background: "cyan"}}; 
+        grid.onClick({target: mockElement});
+        assert.equal(mockElement.style.background, "#000");
+      });
+
+      test('Changing the color and touching an element will correctly use the new color', function() {
+        grid.color = 'tomato';
+        mockElement = {id: "pixel-0", style: {background: "cyan"}}; 
+        grid.onClick({target: mockElement});
+        assert.equal(grid.pixels[0], grid.color);
+        assert.equal(mockElement.style.background, grid.color);
+      });
 
     });
   </script>

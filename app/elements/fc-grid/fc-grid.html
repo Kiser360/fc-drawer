@@ -23,7 +23,7 @@
       }
     </style>
     <template is="dom-repeat" items="{{pixels}}" indexAs="index">
-      <span id="{{index}}" class="colorSpot" onClick="{{pixelTap}}"></span>
+      <span id="{{computeIndex(index)}}" class="colorSpot" onClick="{{pixelTap}}"></span>
     </template>
   </template>
 
@@ -37,29 +37,31 @@
           pixels: {
             type: Array,
             notify: true
+          },
+          color: {
+            type: String,
+            notify: false
           }
         },
         listeners: {
-          'tap': 'onClick'
+          'tap': 'onClick',
+          'click': 'onClick'
+        },
+        computeIndex: function(index) {
+          return "pixel-" + index;
         },
         onClick: function(e){
-          if (e.target.id) {
-            this.set(['pixels', e.target.id], "tap");
-            
+          if (e.target.id.indexOf("pixel") === 0) {
+            this.set(['pixels', e.target.id.split('-')[1]], this.color);
+            e.target.style.background = this.color;
           }
         },
         ready: function() {
-          this.pixels = [
-            '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#000',
-            '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#000',
-            '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#000',
-            '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#000',
-            '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#000',
-            '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#000',
-            '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#000',
-            '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#000',
-          ];
-          this.tapped = false;
+          this.color = "#000";
+          this.pixels = [];
+          for (var i = 0; i < 64; i++) {
+            this.pixels.push(this.color);
+          }
         }
       });
     })();
