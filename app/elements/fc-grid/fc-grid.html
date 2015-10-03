@@ -1,0 +1,68 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="fc-grid">
+  <template>
+    <style>
+      :host {
+        position:relative;
+        display: flex;
+        flex-flow:row wrap;
+        height:0;
+        padding-bottom:80vmin;
+        width:80vmin;
+        font-size:0;
+      }
+      .colorSpot {
+        display:inline-block;
+        margin:1vmin;
+        padding:0;
+        height:8vmin;
+        width:8vmin;
+        background:cyan;
+        border-radius:50%;
+      }
+    </style>
+    <template is="dom-repeat" items="{{pixels}}" indexAs="index">
+      <span id="{{index}}" class="colorSpot" onClick="{{pixelTap}}"></span>
+    </template>
+  </template>
+
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+        is: 'fc-grid',
+        properties: {
+          pixels: {
+            type: Array,
+            notify: true
+          }
+        },
+        listeners: {
+          'tap': 'onClick'
+        },
+        onClick: function(e){
+          if (e.target.id) {
+            this.set(['pixels', e.target.id], "tap");
+            
+          }
+        },
+        ready: function() {
+          this.pixels = [
+            '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#000',
+            '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#000',
+            '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#000',
+            '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#000',
+            '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#000',
+            '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#000',
+            '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#000',
+            '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#000',
+          ];
+          this.tapped = false;
+        }
+      });
+    })();
+  </script>
+
+</dom-module>

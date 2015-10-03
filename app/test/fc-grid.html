@@ -1,0 +1,50 @@
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>my-greeting-basic</title>
+
+  <script src="../../bower_components/webcomponentsjs/webcomponents.min.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+  <link rel="import" href="../../bower_components/test-fixture/test-fixture.html">
+
+  <!-- Import the element to test -->
+  <link rel="import" href="../elements/fc-grid/fc-grid.html">
+
+</head>
+<body>
+
+  <test-fixture id="basic">
+    <template>
+      <fc-grid></fc-grid>
+    </template>
+  </test-fixture>
+
+  <script>
+
+    suite('<fc-grid>', function() {
+      var grid;
+
+
+      setup(function() {
+        grid = fixture('basic');
+      });
+
+      test('Initialize all pixels to black (#000)', function() {
+        grid.pixels.forEach(function(pixel) {
+          assert.equal(pixel, "#000");
+        });
+      });
+      
+      test('Touching a pixel will set the color value', function() {
+        //We'll just invoke the listener and pass a mock event
+        grid.onClick({target:{id: 0}});
+        assert.equal(grid.pixels[0], "tap");
+      });
+
+
+    });
+  </script>
+
+</body>
+</html>

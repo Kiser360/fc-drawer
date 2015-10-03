@@ -16,7 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="generator" content="Polymer Starter Kit" />
-  <title>Polymer Starter</title>
+  <title>FadeCanding Drawing</title>
   <!-- Place favicon.ico in the `app/` directory -->
 
   <!-- Chrome for Android theme color -->
@@ -63,7 +63,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <span id="browser-sync-binding"></span>
   <template is="dom-bind" id="app">
 
-    <paper-drawer-panel id="paperDrawerPanel">
+    <paper-drawer-panel id="paperDrawerPanel" force-narrow>
       <!-- Drawer Scroll Header Panel -->
       <paper-scroll-header-panel drawer fixed>
 
@@ -115,8 +115,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
 
             <section data-route="home">
-              <paper-material elevation="1">
+              <fc-grid id="grid" pixels="{{pixels}}"></fc-grid>
 
+              <paper-material elevation="1">
                 <p class="paper-font-body2">Looking for more Web App layouts? Check out our <a href="https://github.com/PolymerElements/app-layout-templates">layouts</a> collection. You can also <a href="http://polymerelements.github.io/app-layout-templates/">preview</a> them live.</p>
               </paper-material>
               <paper-material elevation="1">
