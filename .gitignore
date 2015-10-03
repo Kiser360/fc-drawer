@@ -34,3 +34,6 @@ dist
 
 # Unnecessary for cloning
 docs
+
+# tmp directory
+.tmp

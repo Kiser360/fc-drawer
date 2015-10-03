@@ -53,8 +53,7 @@ var jshintTask = function (src) {
   return gulp.src(src)
     .pipe($.jshint.extract()) // Extract JS from .html files
     .pipe($.jshint())
-    .pipe($.jshint.reporter('jshint-stylish'))
-    .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
+    .pipe($.jshint.reporter('jshint-stylish'));
 };
 
 var imageOptimizeTask = function (src, dest) {
