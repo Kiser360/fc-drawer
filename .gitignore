@@ -27,7 +27,7 @@ build/Release
 node_modules
 
 # Client-Side Dependency directory
-bower_modules
+bower_components
 
 # Compiled for deployment by "gulp build"
 dist
