@@ -44,16 +44,16 @@
           }
         },
         listeners: {
-          'tap': 'onClick',
-          'click': 'onClick'
+          'tap': 'onClick'
         },
         computeIndex: function(index) {
           return "pixel-" + index;
         },
-        onClick: function(e){
+        onClick: function(e){ 
           if (e.target.id.indexOf("pixel") === 0) {
             this.set(['pixels', e.target.id.split('-')[1]], this.color);
             e.target.style.background = this.color;
+            this.fire("pixels-changed", {});
           }
         },
         ready: function() {
