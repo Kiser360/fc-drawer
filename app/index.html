@@ -112,8 +112,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <!-- Main Content -->
         <div class="content">
-          <fc-socket id="socket" server-hostname="{{server}}" pixel-data="{{pixels}}" color-mode="hex"></fc-socket>
+          <fc-socket id="socket" server-hostname="{{server}}" pixel-data="{{pixels}}" color-mode="rgb"></fc-socket>
           <fc-grid id="grid" pixels="{{pixels}}" color="{{color}}"></fc-grid>
+          <color-picker-fab color="{{color}}"></color-picker-fab>
 
         </div>
       </paper-scroll-header-panel>

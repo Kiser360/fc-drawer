@@ -23,7 +23,7 @@
       }
     </style>
     <template is="dom-repeat" items="{{pixels}}" indexAs="index">
-      <span id="{{computeIndex(index)}}" class="colorSpot" onClick="{{pixelTap}}"></span>
+      <span id="{{computeIndex(index)}}" class="colorSpot"></span>
     </template>
   </template>
 
@@ -57,7 +57,7 @@
           }
         },
         ready: function() {
-          this.color = "#000";
+          this.color = "rgb(0,0,0)";
           this.pixels = [];
           for (var i = 0; i < 64; i++) {
             this.pixels.push(this.color);
