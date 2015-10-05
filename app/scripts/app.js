@@ -34,7 +34,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     document.querySelector("#grid").addEventListener("pixels-changed", function(e) {
       document.querySelector("#socket").send();
     });
-    document.querySelector("#grid").color = "#445588";
   });
 
   // Close drawer after menu item is selected if drawerPanel is narrow

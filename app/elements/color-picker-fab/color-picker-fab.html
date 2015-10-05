@@ -47,10 +47,10 @@
         ready: function() {
           var self = this;
           self.colorDots = [
-            {color: "hsv(0,.85,.15"},
-            {color: "hsv(.25, .85, .15)"},
-            {color: "hsv(.5, .85, .15)"},
-            {color: "hsv(.75, .85, .15)"}
+            {color: "hsv(0,.85,.1"},
+            {color: "hsv(.25, .85, .1)"},
+            {color: "hsv(.5, .85, .1)"},
+            {color: "hsv(.75, .85, .1)"}
           ];
           self.colorDots.forEach(function(item){
             self.addColorCircle(item.color);
@@ -72,8 +72,8 @@
         _hsv: function(color) {
           var numbers = color.split('(')[1].split(')')[0].split(',');
           var h = numbers[0];
-          var s = numbers[1];
-          var v = numbers[2];
+          var s = .85;
+          var v = .75;
           // Based on tinycolor.js implementation
           h = (h % 1) * 6;
           if (h < 0) h += 6;
