@@ -63,32 +63,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <span id="browser-sync-binding"></span>
   <template is="dom-bind" id="app">
 
-    <paper-drawer-panel id="paperDrawerPanel" force-narrow>
+    <paper-drawer-panel id="paperDrawerPanel" force-narrow right-drawer disable-edge-swipe>
       <!-- Drawer Scroll Header Panel -->
       <paper-scroll-header-panel drawer fixed>
 
         <!-- Drawer Toolbar -->
         <paper-toolbar id="drawerToolbar">
-          <span class="paper-font-title">Menu</span>
+          <span class="paper-font-title">Settings</span>
         </paper-toolbar>
 
         <!-- Drawer Content -->
-        <paper-menu class="list" attr-for-selected="data-route" selected="[[route]]">
-          <a data-route="home" href="/" on-click="onDataRouteClick">
-            <iron-icon icon="home"></iron-icon>
-            <span>Home</span>
-          </a>
-
-          <a data-route="users" href="/users" on-click="onDataRouteClick">
-            <iron-icon icon="info"></iron-icon>
-            <span>Users</span>
-          </a>
-
-          <a data-route="contact" href="/contact" on-click="onDataRouteClick">
-            <iron-icon icon="mail"></iron-icon>
-            <span>Contact</span>
-          </a>
-        </paper-menu>
+        <paper-input id="hostnameInput" label="FadeCandy Name or IP" value="{{server}}">
+          <paper-icon-button suffix icon="settings-input-antenna" on-click="socketConnect"></paper-icon-button>
+        </paper-input>
       </paper-scroll-header-panel>
 
       <!-- Main Area -->
@@ -96,7 +83,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <!-- Main Toolbar -->
         <paper-toolbar id="mainToolbar">
-          <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
           
           <!-- Application name -->
           <div class="app-name">FadeCandy Drawing</div>
@@ -104,38 +90,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <span class="flex"></span>
 
           <!-- Toolbar icons -->
-          <paper-icon-button icon="refresh"></paper-icon-button>
-          <paper-icon-button icon="search"></paper-icon-button>
+          <paper-icon-button icon="refresh" on-click="refreshGrid"></paper-icon-button>
+          <paper-icon-button id="paperToggle" icon="settings" paper-drawer-toggle></paper-icon-button>
 
 
         </paper-toolbar>
 
         <!-- Main Content -->
         <div class="content">
-          <fc-socket id="socket" server-hostname="{{server}}" pixel-data="{{pixels}}" color-mode="rgb"></fc-socket>
+          <fc-socket id="socket" server-hostname="{{server}}" pixel-data="{{pixels}}" status="{{message}}" color-mode="rgb"></fc-socket>
           <fc-grid id="grid" pixels="{{pixels}}" color="{{color}}"></fc-grid>
           <color-picker-fab color="{{color}}"></color-picker-fab>
 
         </div>
       </paper-scroll-header-panel>
     </paper-drawer-panel>
-
-    <!-- Uncomment next block to enable Service Worker support (1/2) -->
-    <!--
-    <paper-toast id="caching-complete"
-                 duration="6000"
-                 text="Caching complete! This app will work offline.">
+    <paper-toast id="socketStatus"
+                 duration="3000"
+                 text="{{message}}">
     </paper-toast>
-
-    <platinum-sw-register auto-register
-                          clients-claim
-                          skip-waiting
-                          on-service-worker-installed="displayInstalledToast">
-      <platinum-sw-cache default-cache-strategy="fastest"
-                         cache-config-file="cache-config.json">
-      </platinum-sw-cache>
-    </platinum-sw-register>
-    -->
 
   </template>
 

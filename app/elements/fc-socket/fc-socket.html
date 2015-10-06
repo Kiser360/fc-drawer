@@ -34,20 +34,30 @@
             type: Boolean,
             notify: false,
             value: false
+          },
+          status: {
+            type:String,
+            notify:true,
+            value: "disconnected"
           }
         },
-        onSocketConnect: function() {
-          console.log("Socket Connected");
+        onSocketConnect: function(self) {
+          console.log("Socket Connecting");
+          self.status = "Connecting";
+          self.fire("socket-connected", {});
+          self.reset(self);
         },
-
-        onSocketDisconnect: function() {
+        onSocketDisconnect: function(self) {
+          self.status = "Disconnected";
+          self.fire("socket-disconnected", {});
           console.log("Socket Disconnected");
         },
-
         connect: function() {
+          if (this.socket) {this.socket.close()};
           this.socket = new WebSocket('ws://' + this.serverHostname);
+          this.socket.onclose = this.onSocketDisconnect(this);
+          this.socket.onopen = this.onSocketConnect(this);
         },
-
         send: function() {
           var elem = this;
           var packet = new Uint8ClampedArray(4 + elem.size * 3);
@@ -94,10 +104,30 @@
         ready: function() {
           this.size = 64;
           this.connect();
-          this.socket.onclose = this.onSocketDisconnect;
-          this.socket.onopen = this.onSocketConnect;
         },
-
+        reset: function(self) {
+          var packetIndex = 4;
+          for (var i = 0; i < this.size; i++) {
+            var packet = new Uint8ClampedArray(4 + this.size * 3);
+            packet[packetIndex++] = 0;
+            packet[packetIndex++] = 0;
+            packet[packetIndex++] = 0;
+          }
+          setTimeout(function() {
+            this.socket.send(packet.buffer);
+            if (!this.dither) {
+              this.socket.send(packet.buffer);
+            }
+            if (self.socket.readyState == 1) {
+              self.status = "Connected";
+              console.log("Connected");
+            }
+            else {
+              self.status == "Error Connecting";
+              console.log("Error Connecting");
+            }
+          }, 50);
+        },
         _hex: function(color) {
           // Credit to: Tim Down
           // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
