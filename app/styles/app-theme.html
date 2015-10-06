@@ -20,6 +20,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
    */
 
   /* Application theme */
+  * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
 
   :root {
     --dark-primary-color: #303F9F;
@@ -48,10 +56,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   /* General styles */
   [drawer] {
   }
+  [drawer] div.label {
+    margin-left:1rem;
+  }
   [drawer] paper-input {
     width:90%;
     margin:0 auto;
     color:teal;
+  }
+  [drawer] paper-slider {
+    width:100%;
   }
   paper-toast {
     background: black;

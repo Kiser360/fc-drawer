@@ -44,11 +44,14 @@
           },
           brightness: {
             type: String,
-            notify: true
+            notify: true,
+            observer: "setBrightness"
           }
         },
         listeners: {
-          'tap': 'onClick'
+          'down': 'onClick',
+          'tap': 'onClick',
+          'track': 'onTrack'
         },
         computeIndex: function(index) {
           return "pixel-" + index;
@@ -56,8 +59,16 @@
         onClick: function(e){ 
           var self = this;
           if (e.target.id.indexOf("pixel") === 0) {
-            self.set(['pixels', e.target.id.split('-')[1]], self.color);
+            self.pixels[e.target.id.split('-')[1]] = self.color;
             e.target.style.background = self.color;
+            self.setBrightness();
+          }
+        },
+        onTrack: function(e) {
+          var self = this;
+          if(e.detail.hover().classList.contains("colorSpot")) {
+            self.pixels[e.detail.hover().id.split('-')[1]] = self.color;
+            e.detail.hover().style.background = self.color;
             self.setBrightness();
           }
         },
@@ -72,6 +83,10 @@
         setBrightness: function(value) {
           var self = this;
           self.brightness = value || self.brightness;
+          if (self.brightness > 1) self.brightness = self.brightness/100;
+          if(!self.pixels) {
+            return;
+          }
 
           for (var i = 0; i < self.pixels.length; i++) {
             var pixel = self.pixels[i];

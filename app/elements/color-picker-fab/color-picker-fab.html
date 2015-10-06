@@ -11,14 +11,20 @@
         position:fixed;
         bottom:1.5rem;
         right:1.5rem;
-        z-index:5;
+        height:56px;
+        width:56px;
+      }
+      :host.expanded {
+        height:auto;
       }
       #savedColors {
+        position:relative;
         display:flex;
-        flex-direction: column;
+        flex-direction: column-reverse;
         align-content: space-around;
         justify-content:space-around;
         align-items:center;
+        margin-bottom:56px;
       }
       .dot {
         height:32px;
@@ -26,10 +32,28 @@
         margin-bottom:8px;
         background:tomato;
         border-radius:50%;
+        transform: translate3d(5rem, 0,0);
+        transition:0s;
+        transition-delay: 0s;
+      }
+      #savedColors.show .dot {
+        transform: translate3d(0, 0, 0);
+        transition:.25s;
       }
       #mainFab {
         transition:.25s background;
+        position:absolute;
+        bottom:0;
+        right:0;
       }
+      #savedColors.show .dot:first-child {transition-delay:0s;}
+      #savedColors.show .dot:nth-child(2) {transition-delay:.1s;}
+      #savedColors.show .dot:nth-child(3) {transition-delay:.2s;}
+      #savedColors.show .dot:nth-child(4) {transition-delay:.3s;}
+      #savedColors.show .dot:nth-child(5) {transition-delay:.4s;}
+      #savedColors.show .dot:nth-child(6) {transition-delay:.5s;}
+      #savedColors.show .dot:nth-child(7) {transition-delay:.6s;}
+      #savedColors.show .dot:nth-child(8) {transition-delay:.7s;}
     </style>
     <div id="savedColors" class="flex-vertical"></div>
     <paper-fab id="mainFab" icon="image:brush"></paper-fab>
@@ -48,7 +72,7 @@
           }
         },
         listeners: {
-          'tap':'setColor'
+          'track': 'handleDown'
         },
         ready: function() {
           var self = this;
@@ -62,8 +86,20 @@
             self.addColorCircle(item.color);
           });
         },
-        setColor: function(e) {
-          var elColor = e.target.getAttribute("color");
+        handleDown: function(e) {
+          if (e.detail.state === "start") {
+            this.classList.add("expanded");
+            this.$.savedColors.classList.add("show");
+          }
+          else if (e.detail.state === "end") {
+            this.classList.remove("expanded");
+            this.$.savedColors.classList.remove("show");
+          }
+          this.setColor(e.detail.hover());
+        },
+        setColor: function(el) {
+          if (el.target) el = el.target;
+          var elColor = el.getAttribute("color");
           if (elColor) {
             this.color = elColor;
             this.customStyle["--paper-fab-background"] = this.color;

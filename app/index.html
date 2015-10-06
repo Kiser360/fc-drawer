@@ -73,9 +73,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-toolbar>
 
         <!-- Drawer Content -->
-        <paper-input id="hostnameInput" label="FadeCandy Name or IP" value="{{server}}">
+        <paper-input id="hostnameInput" label="FadeCandy Name or IP" bind-value="{{server}}" on-input="socketConnect">
           <paper-icon-button suffix icon="settings-input-antenna" on-click="socketConnect"></paper-icon-button>
         </paper-input>
+        <br/>
+        <div class="label">Brightness</div>
+        <paper-slider pin value="50" min="5" immediate-value="{{br}}"></paper-slider>
       </paper-scroll-header-panel>
 
       <!-- Main Area -->
@@ -99,7 +102,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <!-- Main Content -->
         <div class="content">
           <fc-socket id="socket" server-hostname="{{server}}" pixel-data="{{pixels}}" status="{{message}}" color-mode="rgb"></fc-socket>
-          <fc-grid id="grid" pixels="{{pixels}}" color="{{color}}"></fc-grid>
+          <fc-grid id="grid" pixels="{{pixels}}" color="{{color}}" brightness="{{br}}"></fc-grid>
           <color-picker-fab color="{{color}}"></color-picker-fab>
 
         </div>
