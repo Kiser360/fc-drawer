@@ -64,50 +64,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template is="dom-bind" id="app">
 
     <paper-drawer-panel id="paperDrawerPanel" force-narrow right-drawer disable-edge-swipe>
-      <!-- Drawer Scroll Header Panel -->
+      <!-- Drawer -->
       <paper-scroll-header-panel drawer fixed>
 
-        <!-- Drawer Toolbar -->
         <paper-toolbar id="drawerToolbar">
           <span class="paper-font-title">Settings</span>
         </paper-toolbar>
 
-        <!-- Drawer Content -->
         <paper-input id="hostnameInput" label="FadeCandy Name or IP" bind-value="{{server}}" on-input="socketConnect">
           <paper-icon-button suffix icon="settings-input-antenna" on-click="socketConnect"></paper-icon-button>
         </paper-input>
         <br/>
         <div class="label">Brightness</div>
-        <paper-slider pin value="50" min="5" immediate-value="{{br}}"></paper-slider>
+        <paper-slider pin value="25" min="5" immediate-value="{{br}}"></paper-slider>
+      
       </paper-scroll-header-panel>
-
-      <!-- Main Area -->
+      <!-- Main -->
       <paper-scroll-header-panel main fixed>
 
-        <!-- Main Toolbar -->
-        <paper-toolbar id="mainToolbar">
-          
-          <!-- Application name -->
+        <paper-toolbar id="mainToolbar">      
           <div class="app-name">FadeCandy Drawing</div>
-
           <span class="flex"></span>
-
-          <!-- Toolbar icons -->
           <paper-icon-button icon="refresh" on-click="refreshGrid"></paper-icon-button>
           <paper-icon-button id="paperToggle" icon="settings" paper-drawer-toggle></paper-icon-button>
-
-
         </paper-toolbar>
 
-        <!-- Main Content -->
         <div class="content">
           <fc-socket id="socket" server-hostname="{{server}}" pixel-data="{{pixels}}" status="{{message}}" color-mode="rgb"></fc-socket>
           <fc-grid id="grid" pixels="{{pixels}}" color="{{color}}" brightness="{{br}}"></fc-grid>
           <color-picker-fab color="{{color}}"></color-picker-fab>
-
         </div>
+
       </paper-scroll-header-panel>
     </paper-drawer-panel>
+
     <paper-toast id="socketStatus"
                  duration="3000"
                  text="{{message}}">
