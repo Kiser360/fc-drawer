@@ -1,0 +1,182 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="fc-socket">
+  <template>
+    <style>
+      :host {
+        display:none;
+      }
+    </style>
+  </template>
+
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+        is: 'fc-socket',
+        properties: {
+          serverHostname: {
+            type: String,
+            notify: true,
+            value: "localhost:7890"
+          },
+          pixelData: {
+            type: Array,
+            notify: true
+          },
+          colorMode: {
+            type: String,
+            notify: false,
+            value: "hex"
+          },
+          dither: {
+            type: Boolean,
+            notify: false,
+            value: false
+          },
+          status: {
+            type:String,
+            notify:true,
+            value: "disconnected"
+          }
+        },
+        onSocketConnect: function(self) {
+          console.log("Socket Connecting");
+          self.status = "Connecting";
+          self.fire("socket-connected", {});
+          self.reset(self);
+        },
+        onSocketDisconnect: function(self) {
+          self.status = "Disconnected";
+          self.fire("socket-disconnected", {});
+          console.log("Socket Disconnected");
+        },
+        connect: function() {
+          if (this.socket) {this.socket.close()};
+          this.socket = new WebSocket('ws://' + this.serverHostname);
+          this.socket.onclose = this.onSocketDisconnect(this);
+          this.socket.onopen = this.onSocketConnect(this);
+        },
+        send: function() {
+          var elem = this;
+          var packet = new Uint8ClampedArray(4 + elem.size * 3);
+          if (elem.socket.readyState != 1 /* OPEN */) {
+            // The server connection isn't open. Nothing to do.
+            return;
+          }
+
+          if (elem.socket.bufferedAmount > packet.length) {
+            // The network is lagging, and we still haven't sent the previous frame.
+            // Don't flood the network, it will just make us laggy.
+            // If fcserver is running on the same computer, it should always be able
+            // to keep up with the frames we send, so we shouldn't reach this point.
+            return;
+          }
+
+          if (this.pixelData.length == this.size) {
+            var packetIndex = 4; //Start after the header
+            elem.pixelData.forEach(function(pixel) {
+              //Convert to rgb values
+              if (elem.colorMode === "hex")
+                var colors = elem._hex(pixel);
+              else if (elem.colorMode === "hsv")
+                var colors = elem._hsv(pixel);
+              else
+                var colors = elem._rgb(pixel);
+
+              packet[packetIndex++] = colors.r;
+              packet[packetIndex++] = colors.g;
+              packet[packetIndex++] = colors.b;
+            });
+
+
+            elem.socket.send(packet.buffer);
+            if (!elem.dither) {
+              elem.socket.send(packet.buffer);
+            }
+          }
+          else {
+            console.log("Incorrect PixelData size");
+          }
+        },
+
+        ready: function() {
+          this.size = 64;
+          this.connect();
+        },
+        reset: function(self) {
+          var packetIndex = 4;
+          for (var i = 0; i < this.size; i++) {
+            var packet = new Uint8ClampedArray(4 + this.size * 3);
+            packet[packetIndex++] = 0;
+            packet[packetIndex++] = 0;
+            packet[packetIndex++] = 0;
+          }
+          setTimeout(function() {
+            this.socket.send(packet.buffer);
+            if (!this.dither) {
+              this.socket.send(packet.buffer);
+            }
+            if (self.socket.readyState == 1) {
+              self.status = "Connected";
+              console.log("Connected");
+            }
+            else {
+              self.status == "Error Connecting";
+              console.log("Error Connecting");
+            }
+          }, 50);
+        },
+        _hex: function(color) {
+          // Credit to: Tim Down
+          // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+          var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+          color = color.replace(shorthandRegex, function(m, r, g, b) {
+              return r + r + g + g + b + b;
+          });
+
+          var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
+          return result ? {
+              r: parseInt(result[1], 16),
+              g: parseInt(result[2], 16),
+              b: parseInt(result[3], 16)
+          } : null;
+        },
+        _rgb: function(color) {
+          var numbers = color.split('(')[1].split(')')[0].split(',');
+          return numbers ? {
+              r: parseInt(numbers[0]),
+              g: parseInt(numbers[1]),
+              b: parseInt(numbers[2])
+          } : null;
+        },
+        _hsv: function(color) {
+          var numbers = color.split('(')[1].split(')')[0].split(',');
+          var h = numbers[0];
+          var s = numbers[1];
+          var v = numbers[2];
+          // Based on tinycolor.js implementation
+          h = (h % 1) * 6;
+          if (h < 0) h += 6;
+
+          var i = h | 0,
+              f = h - i,
+              p = v * (1 - s),
+              q = v * (1 - f * s),
+              t = v * (1 - (1 - f) * s),
+              r = [v, q, p, p, t, v][i],
+              g = [t, v, v, q, p, p][i],
+              b = [p, p, t, v, v, q][i];
+
+          return {
+              r: Math.round(r * 255),
+              g: Math.round(g * 255),
+              b: Math.round(b * 255)
+          };
+        }
+      });
+    })();
+  </script>
+
+</dom-module>

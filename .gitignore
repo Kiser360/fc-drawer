@@ -29,9 +29,6 @@ node_modules
 # Client-Side Dependency directory
 bower_components
 
-# Compiled for deployment by "gulp build"
-dist
-
 # Unnecessary for cloning
 docs
 

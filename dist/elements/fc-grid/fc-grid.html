@@ -1,0 +1,172 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="fc-grid">
+  <template>
+    <style>
+      :host {
+        position:relative;
+        display: flex;
+        flex-flow:row wrap;
+        height:0;
+        padding-bottom:80vmin;
+        width:80vmin;
+        font-size:0;
+      }
+      .colorSpot {
+        display:inline-block;
+        margin:1vmin;
+        padding:0;
+        height:8vmin;
+        width:8vmin;
+        background:black;
+        border-radius:50%;
+      }
+    </style>
+    <template is="dom-repeat" items="{{pixels}}" indexAs="index">
+      <span id="{{computeIndex(index)}}" class="colorSpot"></span>
+    </template>
+  </template>
+
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+        is: 'fc-grid',
+        properties: {
+          pixels: {
+            type: Array,
+            notify: true
+          },
+          color: {
+            type: String,
+            notify: false
+          },
+          brightness: {
+            type: String,
+            notify: true,
+            observer: "setBrightness"
+          }
+        },
+        listeners: {
+          'down': 'onClick',
+          'tap': 'onClick',
+          'track': 'onTrack'
+        },
+        computeIndex: function(index) {
+          return "pixel-" + index;
+        },
+        onClick: function(e){ 
+          var self = this;
+          if (e.target.id.indexOf("pixel") === 0) {
+            self.pixels[e.target.id.split('-')[1]] = self.color;
+            e.target.style.background = self.color;
+            self.setBrightness();
+          }
+        },
+        onTrack: function(e) {
+          var self = this;
+          if(e.detail.hover().classList.contains("colorSpot")) {
+            self.pixels[e.detail.hover().id.split('-')[1]] = self.color;
+            e.detail.hover().style.background = self.color;
+            self.setBrightness();
+          }
+        },
+        ready: function() {
+          this.color = "rgb(0,0,0)";
+          this.brightness = .5;
+          this.pixels = [];
+          for (var i = 0; i < 64; i++) {
+            this.pixels.push(this.color);
+          }
+        },
+        setBrightness: function(value) {
+          var self = this;
+          self.brightness = value || self.brightness;
+          if (self.brightness > 1) self.brightness = self.brightness/100;
+          if(!self.pixels) {
+            return;
+          }
+
+          for (var i = 0; i < self.pixels.length; i++) {
+            var pixel = self.pixels[i];
+            var newColor = self._rgb2hsv(pixel);
+            newColor.v = self.brightness;
+            if (newColor.s > .5)
+              self.pixels[i] = self._hsv2rgb(newColor);
+          }
+          self.fire("pixels-changed", {});
+        },
+        reset: function() {
+          var self = this;
+          var gridDots = self.querySelectorAll(".colorSpot");
+          for (var i = 0; i < gridDots.length; i++) {
+            gridDots[i].style.background = "rgb(0, 0, 0)";
+            self.pixels[i] = "rgb(0, 0, 0)"; 
+          }
+          self.fire("pixels-changed", {});
+        },
+        _rgb2hsv: function(color) {
+          var numbers = color.split('(')[1].split(')')[0].split(',');
+          var rr, gg, bb,
+              r = parseInt(numbers[0]) / 255,
+              g = parseInt(numbers[1]) / 255,
+              b = parseInt(numbers[2]) / 255,
+              h, s,
+              v = Math.max(r, g, b),
+              diff = v - Math.min(r, g, b),
+              diffc = function(c){
+                  return (v - c) / 6 / diff + 1 / 2;
+              };
+
+          if (diff == 0) {
+              h = s = 0;
+          } else {
+              s = diff / v;
+              rr = diffc(r);
+              gg = diffc(g);
+              bb = diffc(b);
+
+              if (r === v) {
+                  h = bb - gg;
+              }else if (g === v) {
+                  h = (1 / 3) + rr - bb;
+              }else if (b === v) {
+                  h = (2 / 3) + gg - rr;
+              }
+              if (h < 0) {
+                  h += 1;
+              }else if (h > 1) {
+                  h -= 1;
+              }
+          }
+          return {
+              h: h,
+              s: s,
+              v: v
+          };
+        },
+        _hsv2rgb: function(color) {
+          var h = color.h;
+          var s = color.s;
+          var v = color.v;
+          // Based on tinycolor.js implementation
+          h = (h % 1) * 6;
+          if (h < 0) h += 6;
+
+          var i = h | 0,
+              f = h - i,
+              p = v * (1 - s),
+              q = v * (1 - f * s),
+              t = v * (1 - (1 - f) * s),
+              r = [v, q, p, p, t, v][i],
+              g = [t, v, v, q, p, p][i],
+              b = [p, p, t, v, v, q][i];
+
+          return "rgb(" + Math.round(r * 255) + "," + Math.round(g * 255) + "," + Math.round(b * 255) + ")"; 
+        }
+      });
+    })();
+  </script>
+
+</dom-module>

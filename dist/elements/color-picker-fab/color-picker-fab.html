@@ -1,0 +1,183 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
+
+<dom-module id="color-picker-fab">
+  <template>
+    <style>
+      :host {
+        --paper-fab-background: rgb(0, 0, 0);
+        position:fixed;
+        bottom:1.5rem;
+        right:1.5rem;
+        height:56px;
+        width:56px;
+      }
+      :host.expanded {
+        height:auto;
+        width:calc(100vw - 3rem);
+      }
+      #savedColors {
+        float:right;
+        margin-right:12px;
+        position:relative;
+        display:flex;
+        flex-direction: column-reverse;
+        align-content: space-around;
+        justify-content:space-around;
+        align-items:center;
+        margin-bottom:56px;
+      }
+      .dot {
+        height:32px;
+        width:32px;
+        margin-bottom:8px;
+        background:tomato;
+        border-radius:50%;
+        transform: translate3d(5rem, 0,0);
+        transition:0s;
+        transition-delay: 0s;
+      }
+      #savedColors.show .dot {
+        transform: translate3d(0, 0, 0);
+        transition:.25s;
+      }
+      #mainFab {
+        position:absolute;
+        bottom:0;
+        right:0;
+      }
+      #colorGrad {
+        position:absolute;
+        bottom:0;
+        right:64px;
+        height:56px;
+        width:calc(100% - 56px - 1.5rem);
+        border-radius:28px;
+        transform:translate3d(0, 80px, 0);
+        transition:0;
+        background: -moz-linear-gradient(right, rgba(255,38,38,1) 0%, rgba(255,247,38,1) 16%, rgba(52,255,38,1) 33%, rgba(48,255,255,1) 50%, rgba(48,55,255,1) 66%, rgba(255,48,255,1) 84%, rgba(255,38,41,1) 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, right top, right top, color-stop(0%,rgba(255,38,38,1)), color-stop(16%,rgba(255,247,38,1)), color-stop(33%,rgba(52,255,38,1)), color-stop(50%,rgba(48,255,255,1)), color-stop(66%,rgba(48,55,255,1)), color-stop(84%,rgba(255,48,255,1)), color-stop(100%,rgba(255,38,41,1))); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(right, rgba(255,38,38,1) 0%,rgba(255,247,38,1) 16%,rgba(52,255,38,1) 33%,rgba(48,255,255,1) 50%,rgba(48,55,255,1) 66%,rgba(255,48,255,1) 84%,rgba(255,38,41,1) 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(right, rgba(255,38,38,1) 0%,rgba(255,247,38,1) 16%,rgba(52,255,38,1) 33%,rgba(48,255,255,1) 50%,rgba(48,55,255,1) 66%,rgba(255,48,255,1) 84%,rgba(255,38,41,1) 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(right, rgba(255,38,38,1) 0%,rgba(255,247,38,1) 16%,rgba(52,255,38,1) 33%,rgba(48,255,255,1) 50%,rgba(48,55,255,1) 66%,rgba(255,48,255,1) 84%,rgba(255,38,41,1) 100%); /* IE10+ */
+        background: linear-gradient(to left, rgba(255,38,38,1) 0%,rgba(255,247,38,1) 16%,rgba(52,255,38,1) 33%,rgba(48,255,255,1) 50%,rgba(48,55,255,1) 66%,rgba(255,48,255,1) 84%,rgba(255,38,41,1) 100%); /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff2626', endColorstr='#ff2629',GradientType=1 ); /* IE6-9 */
+      }
+      :host.expanded #colorGrad {
+        transform:translate3d(0, 0, 0);
+        transition:.25s;
+      }
+      #savedColors.show .dot:first-child {transition-delay:0s;}
+      #savedColors.show .dot:nth-child(2) {transition-delay:.1s;}
+      #savedColors.show .dot:nth-child(3) {transition-delay:.2s;}
+      #savedColors.show .dot:nth-child(4) {transition-delay:.3s;}
+      #savedColors.show .dot:nth-child(5) {transition-delay:.4s;}
+      #savedColors.show .dot:nth-child(6) {transition-delay:.5s;}
+      #savedColors.show .dot:nth-child(7) {transition-delay:.6s;}
+      #savedColors.show .dot:nth-child(8) {transition-delay:.7s;}
+    </style>
+    <div id="savedColors" class="flex-vertical"></div>
+    <paper-fab id="mainFab" icon="image:brush"></paper-fab>
+    <div id="colorGrad"></div>
+  </template>
+
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+        is: 'color-picker-fab',
+        properties: {
+          color: {
+            type: String,
+            notify: true
+          }
+        },
+        listeners: {
+          'track': 'handleDown'
+        },
+        ready: function() {
+          var self = this;
+          self.colorDots = [
+            {color: "hsv(0,.85,.1"},
+            {color: "hsv(.1,.85,.1"},
+            {color: "hsv(.25, .85, .1)"},
+            {color: "hsv(.3333, .85, .1)"},
+            {color: "hsv(.5, .85, .1)"},
+            {color: "hsv(.6666, .85, .1)"},
+            {color: "hsv(.75, .85, .1)"},
+            {color: "hsv(.85,.85,.1"},
+          ];
+          self.colorDots.forEach(function(item){
+            self.addColorCircle(item.color);
+          });
+        },
+        handleDown: function(e) {
+          if (e.detail.state === "start") {
+            this.classList.add("expanded");
+            this.$.savedColors.classList.add("show");
+          }
+          else if (e.detail.state === "end") {
+            this.classList.remove("expanded");
+            this.$.savedColors.classList.remove("show");
+          }
+          var el = e.detail.hover();
+          if (el.classList.contains("dot"))
+            this.setColor(el);
+          else if (el.id === "colorGrad") {
+            var maxWidth = window.getComputedStyle(el).getPropertyValue("width").split('p')[0];
+            var pos = Math.abs(e.detail.dx) - 36;
+            if (pos > maxWidth) pos = maxWidth;
+            if (pos < 0) pos = 0;
+            var hsvColor = "hsv(" + pos/maxWidth + ", .85, .1)"
+            var rgbColor = this._hsv(hsvColor);
+            el.setAttribute("color", rgbColor);
+            this.setColor(el);
+          }
+        },
+        setColor: function(el) {
+          if (el.target) el = el.target;
+          var elColor = el.getAttribute("color");
+          if (elColor) {
+            this.color = elColor;
+            this.customStyle["--paper-fab-background"] = this.color;
+            this.updateStyles();
+          }
+        },
+        addColorCircle: function(color) {
+          var self = this;
+          var dot = document.createElement("div");
+          dot.classList.add("dot");
+          dot.classList.add("color-picker-fab");
+          dot.classList.add("style-scope");
+          dot.style.background = self._hsv(color);
+          dot.setAttribute("color", self._hsv(color));
+          self.$.savedColors.appendChild(dot);
+        },
+        _hsv: function(color) {
+          var numbers = color.split('(')[1].split(')')[0].split(',');
+          var h = numbers[0];
+          var s = .85;
+          var v = .75;
+          // Based on tinycolor.js implementation
+          h = (h % 1) * 6;
+          if (h < 0) h += 6;
+
+          var i = h | 0,
+              f = h - i,
+              p = v * (1 - s),
+              q = v * (1 - f * s),
+              t = v * (1 - (1 - f) * s),
+              r = [v, q, p, p, t, v][i],
+              g = [t, v, v, q, p, p][i],
+              b = [p, p, t, v, v, q][i];
+
+          return "rgb(" + Math.round(r * 255) + "," + Math.round(g * 255) + "," + Math.round(b * 255) + ")"; 
+        }
+      });
+    })();
+  </script>
+
+</dom-module>

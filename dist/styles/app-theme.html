@@ -1,0 +1,156 @@
+<style is="custom-style">
+
+  /*
+   Polymer includes a shim for CSS Custom Properties that we can use for application theming.
+   Below, you'll find the default palette for the Polymer Starter Kit layout. Feel free to play
+   with changing the colors used or generate your own palette of colours at MaterialPalette.com.
+
+   See https://www.polymer-project.org/1.0/docs/devguide/styling.html#xscope-styling-details
+   for further information on custom CSS properties.
+   */
+
+  /* Application theme */
+  * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  :root {
+    --dark-primary-color: #303F9F;
+    --default-primary-color: #F86B3D;
+    --light-primary-color: #C5CAE9;
+
+    --text-primary-color: #f3f2f2; /*text/icons*/
+    --secondary-text-color: #f3f2f2;
+    --accent-color: #FF4081;
+    --primary-background-color: #232832;
+    --disabled-text-color: #bdbdbd;
+    --divider-color: #B6B6B6;
+
+    /* paper-drawer-panel */
+    --drawer-toolbar-background:#FFC629;
+    --drawer-background:#778994;
+    --drawer-border-color: 1px solid #ccc;
+    --drawer-toolbar-border-color: 1px solid rgba(0, 0, 0, 0.22);
+
+    --paper-slider-active-color: var(--default-primary-color);
+    --paper-slider-knob-color: var(--default-primary-color);
+    --paper-slider-pin-color: var(--default-primary-color);
+  }
+
+  paper-drawer-panel {
+    background: var(--primary-background-color);
+  }
+  /* General styles */
+  [drawer] {
+    background:var(--drawer-background);
+  }
+  [drawer] div.label {
+    margin-left:1rem;
+  }
+  [drawer] paper-input {
+    width:90%;
+    margin:0 auto;
+    color:var(--default-primary-color);
+  }
+  [drawer] paper-slider {
+    width:100%;
+  }
+  paper-toast {
+    background: black;
+  }
+  #mainToolbar {
+    color: var(--text-primary-color);
+  }
+
+  #drawerToolbar {
+    color: #232832;
+    background-color: var(--drawer-toolbar-background);
+    border-bottom: var(--drawer-toolbar-border-color);
+  }
+  #mainToolbar .app-name {
+    margin-left: 18px;
+    font-size:24px;
+    font-weight:300;
+  }
+  div {
+    color:var(--text-primary-color);
+  }
+  .content {
+    display:flex;
+    height:100%;
+  }
+  fc-grid {
+    margin:auto !important;
+  }
+
+  /* Breakpoints */
+
+  /* Small */
+  @media (max-width: 600px) {
+
+    #overlay {
+      min-width: 360px;
+    }
+
+    .bg {
+      background: white;
+    }
+
+  }
+
+  /* Tablet+ */
+  @media (min-width: 601px) {
+
+    #drawer.paper-drawer-panel > [drawer] {
+      border-right: 1px solid rgba(0, 0, 0, 0.14);
+    }
+
+  }
+
+  /* Material Design Adaptive Breakpoints */
+  /*
+    Below you'll find CSS media queries based on the breakpoint guidance
+    published by the Material Design team. You can choose to use, customise
+    or remove these breakpoints based on your needs.
+
+    http://www.google.com/design/spec/layout/adaptive-ui.html#adaptive-ui-breakpoints
+   */
+
+  /* mobile-small */
+  @media all and (min-width: 0) and (max-width: 360px) and (orientation: portrait) { }
+  /* mobile-large */
+  @media all and (min-width: 361px) and (orientation: portrait) { }
+  /* mobile-small-landscape */
+  @media all and (min-width: 0) and (max-width: 480px) and (orientation: landscape) { }
+  /* mobile-large-landscape */
+  @media all and (min-width: 481px) and (orientation: landscape) { }
+  /* tablet-small-landscape */
+  @media all and (min-width: 600px) and (max-width: 960px) and (orientation: landscape) { }
+  /* tablet-large-landscape */
+  @media all and (min-width: 961px) and (orientation: landscape) { }
+  /* tablet-small */
+  @media all and (min-width: 600px) and (orientation: portrait) { }
+  /* tablet-large */
+  @media all and (min-width: 601px) and (max-width: 840px) and (orientation : portrait) { }
+  /* desktop-x-small-landscape */
+  @media all and (min-width: 0) and (max-width: 480px) and (orientation: landscape) { }
+  /* desktop-x-small */
+  @media all and (min-width: 0) and (max-width: 480px) and (max-aspect-ratio: 4/3) { }
+  /* desktop-small-landscape */
+  @media all and (min-width: 481px) and (max-width: 840px) and (orientation: landscape) { }
+  /* desktop-small */
+  @media all and (min-width: 481px) and (max-width: 840px) and (max-aspect-ratio: 4/3) { }
+  /* desktop-medium-landscape */
+  @media all and (min-width: 841px) and (max-width: 1280px) and (orientation: landscape) { }
+  /* desktop-medium */
+  @media all and (min-width: 841px) and (max-width: 1280px) and (max-aspect-ratio: 4/3) { }
+  /* desktop-large */
+  @media all and (min-width: 1281px) and (max-width: 1600px) { }
+  /* desktop-xlarge */
+  @media all and (min-width: 1601px) and (max-width: 1920px) { }
+</style>
