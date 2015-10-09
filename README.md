@@ -18,7 +18,7 @@ $ gulp serve
 
 ####Build for Deployment
 ```
-$ gulp build
+$ gulp
 ```
 All files will be minimized/vulcanized/consolidated in the dist folder
 
