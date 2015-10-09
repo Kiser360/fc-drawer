@@ -34,3 +34,6 @@ docs
 
 # tmp directory
 .tmp
+
+# Tests
+app/test
